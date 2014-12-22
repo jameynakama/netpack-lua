@@ -1,4 +1,4 @@
-colorHandler = ROT.Color:new()
+local colorHandler = ROT.Color:new()
 
 Player = Thing:new{
   character = '@',
