@@ -23,3 +23,34 @@ function Map:draw()
     end
   end
 end
+
+function Map:is_blocked(position)
+  local x = position[1]
+  local y = position[2]
+
+  -- invalid locations
+  if (x < 1 or x > LEVEL_WIDTH) or (y < 1 or y > LEVEL_HEIGHT) then
+    return true
+  end
+
+  -- solids
+  things = self.matrix[y][x]
+  for i, thing in ipairs(things) do
+    if thing.solid then
+      return thing
+    end
+  end
+
+  return false
+end
+
+function Map:get_collectibles(position)
+  local collectibles = {}
+  for i, thing in ipairs(self.matrix[position[2]][position[1]]) do
+    if thing.collectible then
+      table.remove(self.matrix[position[2]][position[1]])
+      table.insert(collectibles, thing)
+    end
+  end
+  return collectibles
+end
