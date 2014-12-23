@@ -1,14 +1,17 @@
 ROT = require "vendor/rotLove/rotLove"
 
-require("classes/thing")
-require "classes/player"
+require "classes/thing"
+require "classes/map"
 
+SCREEN_WIDTH = 37
+SCREEN_HEIGHT = 37
 LEVEL_WIDTH = 23
 LEVEL_HEIGHT = 21
 
 function love.load()
   display = ROT.Display:new(LEVEL_WIDTH, LEVEL_HEIGHT)
-  player = Player:new()
+  player = Thing:new{character='@', color="yellow", xpos=1, ypos=1}
+  map = Map:new()
 end
 
 function love.draw()
@@ -16,16 +19,12 @@ function love.draw()
 end
 
 function love.update(dt)
-  for i=1,LEVEL_WIDTH do
-    for j=1,LEVEL_HEIGHT do
-      display:write(' ', i, j)
-    end
-  end
+  map:draw()
 
   display:write("xpos: " .. player.xpos, 1, LEVEL_HEIGHT - 1)
   display:write("ypos: " .. player.ypos, 1, LEVEL_HEIGHT)
 
-  display:write(player.character, player.xpos, player.ypos, player.color)
+  player:draw()
 end
 
 function love.keypressed(key)
