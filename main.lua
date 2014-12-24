@@ -1,5 +1,6 @@
 ROT = require "vendor/rotLove/rotLove"
 
+require "utils"
 require "classes/thing"
 require "classes/map"
 
@@ -10,19 +11,13 @@ LEVEL_HEIGHT = 21
 
 function love.load()
   love.keyboard.setKeyRepeat(true)
+
   display = ROT.Display:new(LEVEL_WIDTH, LEVEL_HEIGHT)
 
   player = Thing:new{character='@', color="yellow", xpos=1, ypos=1}
   player.score = 0
 
-  map = Map:new()
-
-  for i=4,10 do
-    table.insert(map.matrix[i][10], Thing:new{character='#', color='orange', solid=true})
-  end
-  for i=3, 7 do
-    table.insert(map.matrix[4][i], Thing:new{name="pellet", character='.', collectible=true, points=1})
-  end
+  map = Map:new("data/level1.txt")
 end
 
 function love.draw()
@@ -32,9 +27,7 @@ end
 function love.update(dt)
   map:draw()
 
-  display:write("score: " .. player.score, 1, LEVEL_HEIGHT - 2)
-  display:write("xpos: " .. player.xpos, 1, LEVEL_HEIGHT - 1)
-  display:write("ypos: " .. player.ypos, 1, LEVEL_HEIGHT)
+  display:write("score: " .. player.score, 1, LEVEL_HEIGHT)
 
   player:draw()
 end
