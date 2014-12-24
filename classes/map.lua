@@ -6,10 +6,11 @@ function Map:new(options)
   self.__index = self
 
   instance.matrix = {}
-  for y=1, LEVEL_HEIGHT do
-    instance.matrix[y] = {}
-    for x=1, LEVEL_WIDTH do
-      instance.matrix[y][x] = {Thing:new{character="#", color="#333"}}
+  for x=1, LEVEL_WIDTH do
+    instance.matrix[x] = {}
+    for y=1, LEVEL_HEIGHT do
+      -- we need 'floor' objects since it's #unhappiness to have nil values in a table
+      instance.matrix[x][y] = {Thing:new{character=" ", color="#333"}}
     end
   end
 
@@ -17,8 +18,8 @@ function Map:new(options)
 end
 
 function Map:draw()
-  for y, row in ipairs(self.matrix) do
-    for x, things in ipairs(row) do
+  for x, col in ipairs(self.matrix) do
+    for y, things in ipairs(col) do
       display:write(things[#things].character, x, y, things[#things].color)
     end
   end
@@ -34,7 +35,7 @@ function Map:is_blocked(position)
   end
 
   -- solids
-  things = self.matrix[y][x]
+  things = self.matrix[x][y]
   for i, thing in ipairs(things) do
     if thing.solid then
       return thing
@@ -45,10 +46,13 @@ function Map:is_blocked(position)
 end
 
 function Map:get_collectibles(position)
+  local x = position[1]
+  local y = position[2]
+
   local collectibles = {}
-  for i, thing in ipairs(self.matrix[position[2]][position[1]]) do
+  for i, thing in ipairs(self.matrix[x][y]) do
     if thing.collectible then
-      table.remove(self.matrix[position[2]][position[1]])
+      table.remove(self.matrix[x][y])
       table.insert(collectibles, thing)
     end
   end
