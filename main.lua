@@ -9,6 +9,7 @@ LEVEL_WIDTH = 23
 LEVEL_HEIGHT = 21
 
 function love.load()
+  love.keyboard.setKeyRepeat(true)
   display = ROT.Display:new(LEVEL_WIDTH, LEVEL_HEIGHT)
 
   player = Thing:new{character='@', color="yellow", xpos=1, ypos=1}
