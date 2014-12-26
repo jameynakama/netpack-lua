@@ -5,7 +5,9 @@ function Map:new(filename)
   setmetatable(instance, self)
   self.__index = self
 
-  instance.matrix = self:load_from_file(filename)
+  self.items = {}
+  self.things = {}
+  self.matrix = self:load_from_file(filename)
 
   return instance
 end
@@ -27,12 +29,18 @@ function Map:create_matrix_from_string(str)
       if not matrix[x][y] then matrix[x][y] = {Thing:new{name="floor"}} end
 
       local char = str:sub(i, i)
-      if char == "#" then
+      if char == " " then
+        table.insert(matrix[x][y], Thing:new{name="floor"})
+      elseif char == "#" then
         table.insert(matrix[x][y], Thing:new{name="wall", character="#", color="orange", solid=true})
       elseif char == "." then
-        table.insert(matrix[x][y], Thing:new{name="pellet", character=".", collectible=true, points=1})
+        local pellet = Thing:new{name="pellet", character=".", collectible=true, points=1}
+        table.insert(matrix[x][y], pellet)
+        table.insert(self.items, pellet)
       elseif char == "o" then
-        table.insert(matrix[x][y], Thing:new{name="power pellet", character="o", collectible=true, points=5})
+        local power_pellet = Thing:new{name="power pellet", character="o", collectible=true, points=5}
+        table.insert(matrix[x][y], power_pellet)
+        table.insert(self.items, power_pellet)
       elseif char == "@" then
         player:move{x, y}
       end
@@ -64,6 +72,7 @@ function Map:is_blocked(position)
   things = self.matrix[x][y]
   for i, thing in ipairs(things) do
     if thing.solid then
+      -- if solid, return the the thing (will evaluate to true)
       return thing
     end
   end
@@ -78,9 +87,14 @@ function Map:get_collectibles(position)
   local collectibles = {}
   for i, thing in ipairs(self.matrix[x][y]) do
     if thing.collectible then
-      table.remove(self.matrix[x][y])
+      table.remove(self.matrix[x][y])  -- probably a bug, needs to remove THING, not always last element
       table.insert(collectibles, thing)
     end
   end
   return collectibles
+end
+
+function Map:get_tile(x, y)
+  -- self.matrix[x][y][1] is always a floor ([2] may also be a floor)
+  return self.matrix[x][y][2]
 end
