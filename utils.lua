@@ -4,3 +4,5 @@ function read_all(file)
   f:close()
   return content
 end
+
+-- TODO: make remove_item, remove_ghost, etc., maybe

@@ -5,7 +5,6 @@ function Map:new(filename)
   setmetatable(instance, self)
   self.__index = self
 
-  self.items = {}
   self.things = {}
   self.matrix = self:load_from_file(filename)
 
@@ -36,11 +35,25 @@ function Map:create_matrix_from_string(str)
       elseif char == "." then
         local pellet = Thing:new{name="pellet", character=".", collectible=true, points=1}
         table.insert(matrix[x][y], pellet)
-        table.insert(self.items, pellet)
       elseif char == "o" then
         local power_pellet = Thing:new{name="power pellet", character="o", collectible=true, points=5}
         table.insert(matrix[x][y], power_pellet)
-        table.insert(self.items, power_pellet)
+      elseif char == "B" then
+        local ghost = Thing:new{name="Blinky", character="B", color="red"}
+        ghost.move{x, y}
+        --table.insert(matrix[x][y], ghost)
+      elseif char == "P" then
+        local ghost = Thing:new{name="Pinky", character="P", color="pink"}
+        ghost.move{x, y}
+        --table.insert(matrix[x][y], ghost)
+      elseif char == "I" then
+        local ghost = Thing:new{name="Inky", character="I", color="blue"}
+        ghost.move{x, y}
+        --table.insert(matrix[x][y], ghost)
+      elseif char == "A" then
+        local ghost = Thing:new{name="Anne", character="A", color="white"}
+        ghost.move{x, y}
+        --table.insert(matrix[x][y], ghost)
       elseif char == "@" then
         player:move{x, y}
       end
@@ -69,7 +82,7 @@ function Map:is_blocked(position)
   end
 
   -- solids
-  things = self.matrix[x][y]
+  local things = self.matrix[x][y]
   for i, thing in ipairs(things) do
     if thing.solid then
       -- if solid, return the the thing (will evaluate to true)

@@ -30,6 +30,8 @@ function love.update(dt)
   display:write("score: " .. player.score, 1, LEVEL_HEIGHT)
 
   player:draw()
+  -- TODO: for ghost in map.ghosts or something, do things
+  -- TODO: will need to make a ghosts table somewhere
 end
 
 function love.keypressed(key)

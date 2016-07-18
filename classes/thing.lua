@@ -21,6 +21,8 @@ function Thing:new(options)
     instance.color = colorHandler:fromString("white")
   end
 
+  instance.ai = nil
+
   return instance
 end
 
@@ -33,6 +35,21 @@ function Thing:draw()
 end
 
 function Thing:move(position)
+  -- TODO: Make this take a map?
   self.xpos = position[1]
   self.ypos = position[2]
+end
+
+function Thing:random_move(map)
+  possible_moves = {}
+  for x in {-1, 1} do
+    for y in {-1, 1} do
+      new_x = self.xpos + x
+      new_y = self.ypos + y
+      if not map.is_blocked({new_x, new_y}) then
+        self.move({new_x, new_y})
+        --table.insert(map.matrix[new_x][new_y], self)
+      end
+    end
+  end
 end
